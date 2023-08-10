@@ -5,9 +5,10 @@ start_time = time.time()
 ssh = paramiko.SSHClient()
 ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
 
-private_key = paramiko.RSAKey.from_private_key_file('/home/aluno/Downloads/CMU-2023-1-keypair.pem')
+private_key = paramiko.RSAKey.from_private_key_file('CMU-2023-1-keypair.pem')
 
-ssh.connect(hostname='44.202.35.36', username='ubuntu', pkey=private_key)
+# Depois tem que automatizar pegar esse IP, usando boto3 (se o ID da instancia nao mudar)
+ssh.connect(hostname='54.152.90.17', username='ubuntu', pkey=private_key)
 
 # Executar o comando na instância e obter a saída.
 stdin, stdout, stderr = ssh.exec_command('echo "Test"')
@@ -26,7 +27,6 @@ print(end_time - start_time)
 # deixar ja conectado com a instancia talvez(?) (acho que nao na vdd, conectar na shell se precisar, rodar e depois fechar)
 # poderia utilizar um parametro ficticio de bateria para levar mais um fator em consideracao e alterar a execucao de alguma forma
 
-# Fazer um github pra passar essas coisas pra instancia.
 # Depois calcular o tempo de rodar a funcao com um sleep menor na cloud vs rodar localmente com sleep maior
 # Primeiro testar com o mesmo sleep pra ver a diferenca
 
