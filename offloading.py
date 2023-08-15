@@ -8,10 +8,10 @@ ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
 private_key = paramiko.RSAKey.from_private_key_file('CMU-2023-1-keypair.pem')
 
 # Depois tem que automatizar pegar esse IP, usando boto3 (se o ID da instancia nao mudar)
-ssh.connect(hostname='54.152.90.17', username='ubuntu', pkey=private_key)
+ssh.connect(hostname='3.92.199.132', username='ubuntu', pkey=private_key)
 
 # Executar o comando na instância e obter a saída.
-stdin, stdout, stderr = ssh.exec_command('echo "Test"')
+stdin, stdout, stderr = ssh.exec_command('cd CMU-Offloading; python3 cloud.py 2')
 
 # Ler a saída do comando.
 output = stdout.read().decode('utf-8')
