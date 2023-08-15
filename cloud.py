@@ -5,6 +5,8 @@ def process(n):
     for i in range(n):
         time.sleep(1)
 
-process(int(sys.argv[0]))
+start_time = time.time()
+process(int(sys.argv[1]))
+end_time = time.time()
 
-print("Completed cloud processing")
+print("Completed cloud processing in %f seconds" %(end_time - start_time))
