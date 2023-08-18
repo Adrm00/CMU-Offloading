@@ -3,28 +3,41 @@ import paramiko
 
 processing_power = 1.00
 
-# EU PASSARIA UM PARAMETRO DE TAMANHO QUE DEPENDENDO SERIA MELHOR RODAR LOCAL OU REMOTAMENTE (pode ate ser o valor do sleep).
-# Utilizar sleep() pra simular processamento: menor local e maior na cloud (parametro + ou * algo)
-# medir o tempo executa as funcoes (ruim?)
-# deixar ja conectado com a instancia talvez(?) (acho que nao na vdd, conectar na shell se precisar, rodar e depois fechar)
-# poderia utilizar um parametro ficticio de bateria para levar mais um fator em consideracao e alterar a execucao de alguma forma
 
-# Depois calcular o tempo de rodar a funcao com um sleep menor na cloud vs rodar localmente com sleep maior
-# Primeiro testar com o mesmo sleep pra ver a diferenca
+# Separar bem cada tempo de execucao (latencia, transmissao, processamento)
+
+# Generalizar pra simular um middleware na verdade, e nao uma aplicacao especifica
+# Ou seja, passar parametros como: 
+## Processing power
+## Tamanho da mensagem (simular quantidade de bits enviados de alguma forma)
+## Quantidade de chamadas
+## Latencia
+## Taxa de transmissao
 
 def measure_local_execution_time(n):
-    start_time = time.time()
-    local_process(1)
-    end_time = time.time()
-    total_time = end_time - start_time
-    return(total_time * n)
+    local_processing_time = 1
+
+    print("PROCESSAMENTO LOCAL")
+    print("Tempo de processamento para n = %d: %f" %(n, (local_processing_time * n)))
+    print("Tempo total: %f\n" %(local_processing_time * n))
+
+    return(local_processing_time * n)
 
 def measure_cloud_execution_time(n):
+    cloud_processing_time = 0.8
+    
     start_time = time.time()
-    cloud_process_time = cloud_process(1)
+    cloud_process(0)
     end_time = time.time()
-    total_time = end_time - start_time
-    return(total_time + (cloud_process_time * n))
+
+    connection_time = end_time - start_time
+
+    print("PROCESSAMENTO REMOTO")
+    print("Tempo de conexao: %f" %connection_time)
+    print("Tempo de processamento para n = %d: %f" %(n, (cloud_processing_time * n)))
+    print("Tempo total: %f\n" %(connection_time + (cloud_processing_time * n)))
+
+    return(connection_time + (cloud_processing_time * n))
 
 def calculate_offloading_need(n):
     if measure_cloud_execution_time(n) < measure_local_execution_time(n):
@@ -38,7 +51,7 @@ def cloud_process(n):
     private_key = paramiko.RSAKey.from_private_key_file('CMU-2023-1-keypair.pem')
 
     # Depois tem que automatizar pegar esse IP, usando boto3 (se o ID da instancia nao mudar)
-    ssh.connect(hostname='18.233.101.60', username='ubuntu', pkey=private_key)
+    ssh.connect(hostname='3.83.246.122', username='ubuntu', pkey=private_key)
 
     # Executar o comando na instância e obter a saída.
     stdin, stdout, stderr = ssh.exec_command('cd CMU-Offloading; python3 cloud.py %s' %n)
@@ -55,8 +68,12 @@ def local_process(n):
 def process(n):
     if calculate_offloading_need(n) == True:
         cloud_process(n)
+        print("O processamento foi feito na nuvem.")
     else:
         local_process(n)
+        print("O processamento foi feito localmente.")
 
 print(measure_local_execution_time(3))
 print(measure_cloud_execution_time(3))
+
+process(3)
