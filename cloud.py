@@ -1,8 +1,10 @@
 import sys
 import time
 
+processing_power = 1.25
+
 def process(n):
-    time.sleep(1 * n)
+    time.sleep(1/processing_power * n)
 
 start_time = time.time()
 process(int(sys.argv[1]))

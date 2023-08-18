@@ -1,7 +1,7 @@
 import time
 import paramiko
 
-#battery = 1.00
+processing_power = 1.00
 
 # EU PASSARIA UM PARAMETRO DE TAMANHO QUE DEPENDENDO SERIA MELHOR RODAR LOCAL OU REMOTAMENTE (pode ate ser o valor do sleep).
 # Utilizar sleep() pra simular processamento: menor local e maior na cloud (parametro + ou * algo)
@@ -50,7 +50,7 @@ def cloud_process(n):
     return float(output)
 
 def local_process(n):
-    time.sleep(3 * n)
+    time.sleep(1/processing_power * n)
 
 def process(n):
     if calculate_offloading_need(n) == True:
@@ -58,5 +58,5 @@ def process(n):
     else:
         local_process(n)
 
-print(measure_local_execution_time(100))
-print(measure_cloud_execution_time(100))
+print(measure_local_execution_time(3))
+print(measure_cloud_execution_time(3))
