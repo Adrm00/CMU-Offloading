@@ -58,5 +58,5 @@ def process(n):
     else:
         local_process(n)
 
-#print(measure_local_execution_time(100))
-##print(measure_cloud_execution_time(100))
+print(measure_local_execution_time(100))
+print(measure_cloud_execution_time(100))
