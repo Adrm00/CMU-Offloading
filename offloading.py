@@ -47,7 +47,7 @@ def cloud_process(n):
     output = stdout.read().decode('utf-8')
     print(f'Resultado do comando: {output}')
 
-    return int(output)
+    return float(output)
 
 def local_process(n):
     time.sleep(3 * n)
@@ -58,5 +58,5 @@ def process(n):
     else:
         local_process(n)
 
-print(measure_local_execution_time(100))
-print(measure_cloud_execution_time(100))
+#print(measure_local_execution_time(100))
+##print(measure_cloud_execution_time(100))
