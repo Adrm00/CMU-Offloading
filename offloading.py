@@ -1,24 +1,6 @@
 import time
 import paramiko
 
-start_time = time.time()
-ssh = paramiko.SSHClient()
-ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
-
-private_key = paramiko.RSAKey.from_private_key_file('CMU-2023-1-keypair.pem')
-
-# Depois tem que automatizar pegar esse IP, usando boto3 (se o ID da instancia nao mudar)
-ssh.connect(hostname='3.92.199.132', username='ubuntu', pkey=private_key)
-
-# Executar o comando na instância e obter a saída.
-stdin, stdout, stderr = ssh.exec_command('cd CMU-Offloading; python3 cloud.py 2')
-
-# Ler a saída do comando.
-output = stdout.read().decode('utf-8')
-print(f'Resultado do comando: {output}')
-end_time = time.time()
-print(end_time - start_time)
-
 #battery = 1.00
 
 # EU PASSARIA UM PARAMETRO DE TAMANHO QUE DEPENDENDO SERIA MELHOR RODAR LOCAL OU REMOTAMENTE (pode ate ser o valor do sleep).
@@ -30,23 +12,49 @@ print(end_time - start_time)
 # Depois calcular o tempo de rodar a funcao com um sleep menor na cloud vs rodar localmente com sleep maior
 # Primeiro testar com o mesmo sleep pra ver a diferenca
 
-def measure_local_execution_time():
+def measure_local_execution_time(n):
     start_time = time.time()
-    process()
+    local_process(1)
     end_time = time.time()
-    return(end_time - start_time)
+    total_time = end_time - start_time
+    return(total_time * n)
 
-def measure_cloud_execution_time():
+def measure_cloud_execution_time(n):
     start_time = time.time()
-    #offload_process()
+    cloud_process(1)
     end_time = time.time()
-    return(end_time - start_time)
+    total_time = end_time - start_time
+    return(total_time * n)
 
-def calculate_offloading_need():
-    if measure_cloud_execution_time() < measure_local_execution_time():
+def calculate_offloading_need(n):
+    if measure_cloud_execution_time(n) < measure_local_execution_time(n):
         return True
     return False
 
-def process():
-    print("Operaçao custosa!")
-    time.sleep(5)
+def cloud_process(n):
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy)
+
+    private_key = paramiko.RSAKey.from_private_key_file('CMU-2023-1-keypair.pem')
+
+    # Depois tem que automatizar pegar esse IP, usando boto3 (se o ID da instancia nao mudar)
+    ssh.connect(hostname='18.233.101.60', username='ubuntu', pkey=private_key)
+
+    # Executar o comando na instância e obter a saída.
+    stdin, stdout, stderr = ssh.exec_command('cd CMU-Offloading; python3 cloud.py %s' %n)
+
+    # Ler a saída do comando.
+    output = stdout.read().decode('utf-8')
+    print(f'Resultado do comando: {output}')
+
+def local_process(n):
+    time.sleep(3 * n)
+
+def process(n):
+    if calculate_offloading_need(n) == True:
+        cloud_process(n)
+    else:
+        local_process(n)
+
+print(measure_local_execution_time(50))
+print(measure_cloud_execution_time(50))

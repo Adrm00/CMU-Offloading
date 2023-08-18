@@ -2,8 +2,7 @@ import sys
 import time
 
 def process(n):
-    for i in range(n):
-        time.sleep(1)
+    time.sleep(1 * n)
 
 start_time = time.time()
 process(int(sys.argv[1]))
