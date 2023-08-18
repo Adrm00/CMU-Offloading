@@ -21,10 +21,10 @@ def measure_local_execution_time(n):
 
 def measure_cloud_execution_time(n):
     start_time = time.time()
-    cloud_process(1)
+    cloud_process_time = cloud_process(1)
     end_time = time.time()
     total_time = end_time - start_time
-    return(total_time * n)
+    return(total_time + (cloud_process_time * n))
 
 def calculate_offloading_need(n):
     if measure_cloud_execution_time(n) < measure_local_execution_time(n):
@@ -47,6 +47,8 @@ def cloud_process(n):
     output = stdout.read().decode('utf-8')
     print(f'Resultado do comando: {output}')
 
+    return int(output)
+
 def local_process(n):
     time.sleep(3 * n)
 
@@ -56,5 +58,5 @@ def process(n):
     else:
         local_process(n)
 
-print(measure_local_execution_time(50))
-print(measure_cloud_execution_time(50))
+print(measure_local_execution_time(100))
+print(measure_cloud_execution_time(100))

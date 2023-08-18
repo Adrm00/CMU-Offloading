@@ -8,4 +8,4 @@ start_time = time.time()
 process(int(sys.argv[1]))
 end_time = time.time()
 
-print("Completed cloud processing in %f seconds" %(end_time - start_time))
+print((end_time - start_time))
