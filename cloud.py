@@ -14,5 +14,8 @@ def process(n):
     print('Mensagem transmitida em %f segundos' %(n/transmission_rate))
     print('Processamento na nuvem realizado em %f segundos' %(1/processing_power * n))
 
-process(int(sys.argv[1]))
+n = int(sys.argv[1])
+
+if n > 0:
+    process(n)
 

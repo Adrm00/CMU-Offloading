@@ -28,7 +28,7 @@ def measure_local_execution_time(n):
 def measure_cloud_execution_time(n):
     cloud_processing_time = 1/cloud_processing_power
     
-    # Medir tempo de conexao
+    # Medir apenas o tempo de conexao
     start_time = time.time()
     cloud_process(0)
     end_time = time.time()
@@ -62,20 +62,15 @@ def cloud_process(n):
 
     # Ler a saída do comando.
     output = stdout.read().decode('utf-8')
-    print(f'Resultado do comando: {output}')
-
-    return float(output)
+    print(f'Mensagens da nuvem:\n {output}')
 
 def local_process(n):
     time.sleep(1/local_processing_power * n)
 
 def process(n):
     if calculate_offloading_need(n) == True:
-        cloud_process(n)
-        print("O processamento foi feito na nuvem.")
+        print("O processamento sera feito na nuvem.")
     else:
-        local_process(n)
-        print("O processamento foi feito localmente.")
+        print("O processamento sera feito localmente.")
 
-print(measure_local_execution_time(300))
-print(measure_cloud_execution_time(300))
+process(1000)
