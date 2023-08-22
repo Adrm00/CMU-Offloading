@@ -6,16 +6,6 @@ local_processing_power = 1.00
 cloud_processing_power = 1.25
 cloud_transmission_rate = 10 #bytes/segundo
 
-# Separar bem cada tempo de execucao (latencia, transmissao, processamento)
-
-# Generalizar pra simular um middleware na verdade, e nao uma aplicacao especifica
-# Ou seja, passar parametros como: 
-## Processing power
-## Tamanho da mensagem (simular quantidade de bits enviados de alguma forma)
-## Quantidade de chamadas
-## Latencia
-## Taxa de transmissao
-
 def measure_local_execution_time(n):
     local_processing_time = 1/local_processing_power
 
@@ -54,7 +44,6 @@ def cloud_process(n):
 
     private_key = paramiko.RSAKey.from_private_key_file('CMU-2023-1-keypair.pem')
 
-    # Depois tem que automatizar pegar esse IP, usando boto3 (se o ID da instancia nao mudar)
     ssh.connect(hostname='3.95.245.233', username='ubuntu', pkey=private_key)
 
     # Executar o comando na instância e obter a saída.
@@ -62,7 +51,7 @@ def cloud_process(n):
 
     # Ler a saída do comando.
     output = stdout.read().decode('utf-8')
-    print(f'Mensagens da nuvem:\n {output}')
+    print(f'{output}')
 
 def local_process(n):
     time.sleep(1/local_processing_power * n)
@@ -73,4 +62,4 @@ def process(n):
     else:
         print("O processamento sera feito localmente.")
 
-process(10)
+process(18)

@@ -13,8 +13,7 @@ def process(n):
 
 n = int(sys.argv[1])
 
-start_time = time.time()
 if n > 0:
     process(n)
-end_time = time.time()
-print("Offloading realizado na nuvem em %f segundos" %(end_time - start_time))
+
+print("Esse codigo foi executado na nuvem")
