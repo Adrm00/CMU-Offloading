@@ -73,4 +73,4 @@ def process(n):
     else:
         print("O processamento sera feito localmente.")
 
-process(1000)
+process(10)
